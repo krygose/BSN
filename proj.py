@@ -69,17 +69,27 @@ def synapses():
 
 def aer():
     try:
-        with serial.Serial(PORT, BAUDRATE) as ser:
+        with serial.Serial(PORT, BAUDRATE, timeout=1) as ser:
             data_2d = np.array(read_weights('image_1_spikes.txt'))
             for i in range(data_2d.shape[0]):
                 for j in range(data_2d.shape[1]):
                     if data_2d[i, j] == 1:
                         send_serial_data(PORT, BAUDRATE, bytes([0x20, j]))
                 send_serial_data(PORT, BAUDRATE, bytes([0x20, 0xFF]))
+
+            
+#odczyt
+            while True:
+                byte_data = ser.read(1)  
+                if byte_data:
+                    value = int.from_bytes(byte_data, byteorder='big')
+                    if value > 127:
+                        print(f"Otrzymana liczba: {value-127}")
+
     except Exception as e:
         print(f"Error: {e}")
     finally:
-        print("Finished AER transmission.")
+        print("Finished AER process.")
 
 def generate_synapse_packet(pre, post, weight):
     weight = (1 << 4) + weight if weight < 0 else weight
