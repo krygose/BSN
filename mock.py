@@ -3,6 +3,7 @@ import numpy as np
 import argparse
 import ast
 import csv
+import threading
 
 # Mock Serial Class for Testing
 class MockSerial:
@@ -87,6 +88,22 @@ def synapses():
     send_synapses(read_weights('neuron_weights_first.txt'))
     send_synapses(read_weights('neuron_weights_second.txt'), 64, 128)
 
+
+#odczyt
+def read_serial_data(ser):
+    try:
+        while True:
+            read_thread = threading.Thread(target=read_serial_data, args=(ser,), daemon=True)
+            read_thread.start()
+
+            byte_data = ser.read(1)  # Odczytujemy pojedynczy bajt
+            if byte_data:
+                value = int.from_bytes(byte_data, byteorder='big')
+                if value > 127:
+                    print(f"Received number: {value - 127}")
+    except Exception as e:
+        print(f"Error: {e}")
+
 def aer():
     try:
         with MockSerial(PORT, BAUDRATE) as ser:
@@ -94,8 +111,9 @@ def aer():
             for i in range(data_2d.shape[0]):
                 for j in range(data_2d.shape[1]):
                     if data_2d[i, j] == 1:
-                        send_serial_data(PORT, BAUDRATE, bytes([0x20, j]))
-                send_serial_data(PORT, BAUDRATE, bytes([0x20, 0xFF]))
+                        ser.write(bytes([0x20, j]))                    
+                ser.write(bytes([0x20, 0xFF]))
+                
     except Exception as e:
         print(f"Error: {e}")
     finally:

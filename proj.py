@@ -3,6 +3,7 @@ import numpy as np
 import argparse
 import ast
 import serial
+import threading
 
 BAUDRATE = 115200
 PORT = "/dev/ttyACM0"
@@ -67,24 +68,30 @@ def synapses():
     send_synapses(read_weights('neuron_weights_first.txt'))
     send_synapses(read_weights('neuron_weights_second.txt'), 64, 128)
 
+#odczyt
+def read_serial_data(ser):
+    try:
+        while True:
+            byte_data = ser.read(1)  # Odczytujemy pojedynczy bajt
+            if byte_data:
+                value = int.from_bytes(byte_data, byteorder='big')
+                if value > 127:
+                    print(f"Otrzymana liczba: {value - 127}")
+    except Exception as e:
+        print(f"Błąd podczas odczytu: {e}")
+
 def aer():
     try:
         with serial.Serial(PORT, BAUDRATE, timeout=1) as ser:
+            read_thread = threading.Thread(target=read_serial_data, args=(ser,), daemon=True)
+            read_thread.start()
+
             data_2d = np.array(read_weights('image_1_spikes.txt'))
             for i in range(data_2d.shape[0]):
                 for j in range(data_2d.shape[1]):
                     if data_2d[i, j] == 1:
-                        send_serial_data(PORT, BAUDRATE, bytes([0x20, j]))
-                send_serial_data(PORT, BAUDRATE, bytes([0x20, 0xFF]))
-
-            
-#odczyt
-            while True:
-                byte_data = ser.read(1)  
-                if byte_data:
-                    value = int.from_bytes(byte_data, byteorder='big')
-                    if value > 127:
-                        print(f"Otrzymana liczba: {value-127}")
+                        ser.write(bytes([0x20, j]))                    
+                ser.write(bytes([0x20, 0xFF]))
 
     except Exception as e:
         print(f"Error: {e}")
