@@ -45,3 +45,6 @@ neuron_weights_first.txt – plik z wagami pierwszej warstwy
 neuron_weights_second.txt – plik z wagami drugiej warstwy
 
 image_1_spikes.txt – dane wejściowe pojedynczego obrazka 
+
+## Help
+`python3 proj.py -help`
