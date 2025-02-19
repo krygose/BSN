@@ -7,10 +7,15 @@ mock.py jest to plik do użycia z wirtualną atrapą uzywana do testów
 
 
 ## Moduły
--numpy
--serial
--argparse
--ast
+
+- numpy
+
+- serial
+
+- argparse
+
+- ast
+
 Instalacja
 
 `pip install numpy pyserial`
@@ -18,15 +23,15 @@ Instalacja
 
 ## Użycie 
 
-configstart – wysyła komendę rozpoczęcia konfiguracji
+- configstart – wysyła komendę rozpoczęcia konfiguracji
 
-neuronsetup – konfiguruje neurony
+- neuronsetup – konfiguruje neurony
 
-synapses – wysyła synapsy na podstawie plików wag
+- synapses – wysyła synapsy na podstawie plików wag
 
-configend – wysyła komendę zakończenia konfiguracji
+- configend – wysyła komendę zakończenia konfiguracji
 
-aer – wysyła i odczytuje dane z urządzenia
+- aer – wysyła i odczytuje dane z urządzenia
 
 Użycie tych argumentów powinno przebiegać zgodnie z podaną kolejnością od górnego do dolnego
 
@@ -36,15 +41,15 @@ Użycie tych argumentów powinno przebiegać zgodnie z podaną kolejnością od 
 
 ## Pliki danych 
 
-proj.py – główny skrypt programu
+- proj.py – główny skrypt programu dla urządzenia fizycznego
 
-mock.py – główny skrypt programu 
+- mock.py – główny skrypt programu dla atrapy
 
-neuron_weights_first.txt – plik z wagami pierwszej warstwy
+- neuron_weights_first.txt – plik z wagami pierwszej warstwy
 
-neuron_weights_second.txt – plik z wagami drugiej warstwy
+- neuron_weights_second.txt – plik z wagami drugiej warstwy
 
-image_1_spikes.txt – dane wejściowe pojedynczego obrazka 
+- image_1_spikes.txt – dane wejściowe pojedynczego obrazka 
 
 ## Help
 `python3 proj.py -help`
